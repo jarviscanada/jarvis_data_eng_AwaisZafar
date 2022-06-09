@@ -126,7 +126,7 @@ L2_cache=$(echo "$lscpu_out"  | egrep "^L2 cache:" | awk '{print $3}' | xargs)
 total_mem=$(echo "$fr"  | egrep "^Mem:" | awk '{print $2}' | xargs)
 timestamp=`date +%Y-%m-%d" "%H:%M:%S`
 
-//defining a variable "insert_stmt" and assigning string of sql query
+//defining a variable "insert_stmt" and assigning string of sql query which inserts the data into the table
 
 insert_stmt="INSERT INTO host_info(hostname,cpu_number,cpu_architecture,cpu_model,cpu_mhz,L2_cache,total_mem,timestamp) VALUES('$hostname',$cpu_number,'$cpu_architecture','$cpu_model',$cpu_mhz,'$L2_cache',$total_mem,'$timestamp')";
 
@@ -136,22 +136,26 @@ psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c "$insert_stmt" //i
 exit $?
 ```
 - host_usage.sh
-```#!/bin/bash
+```#! /bin/bash // used to tell the Linux OS which interpreter to use to parse the rest of the file.
 
-psql_host=$1
-psql_port=$2
-db_name=$3
-psql_user=$4
-psql_password=$5
+psql_host=$1 //getting the 1st argument from the user which is the hostname
+psql_port=$2 //getting the 2nd argument from the user which the port number
+db_name=$3 //getting the 3rd argument from the user which is the name of the database
+psql_user=$4 //getting the 4th argument from the user which is the username of the psql instance
+psql_password=$5 //getting the 5th argument from the user which the password for the psql instance
+
+//Checking if the correct number of arguments are entered if not then print "Illegal number of parameters" otherwise continue
 
 if [ "$#" -ne 5 ]; then
     echo "Illegal number of parameters"
     exit 1
 fi
 
-hostname=$(hostname -f)
-vm=$(vmstat)
-fr=$(free)
+hostname=$(hostname -f) //saving the current hostname into hostname variable
+vm=$(vmstat) //getting the values from vmstat command and storing it into vm variable
+fr=$(free) //getting the values from free command and storing it into fr variable
+
+//extracting the specific values from lscpu and free commands and storing them into a relevant variable using egrep function which looks for the specified string.
 
 memory_free=$(echo "$fr"  | egrep "^Mem:" | awk '{print $4}' | xargs)
 cpu_idle=$(echo "$vm"  | egrep "1" | awk '{print $4}' | xargs)
@@ -160,21 +164,24 @@ disk_io=$(echo "$vm"  | egrep "1" | awk '{print $10}' | xargs)
 disk_available=$(echo "$fr"  | egrep "Mem:" | awk '{print $6}' | xargs)
 timestamp=$(date +%Y-%m-%d" "%H:%M:%S)
 
-host_id="(SELECT id FROM host_info WHERE hostname='$hostname')";
+host_id="(SELECT id FROM host_info WHERE hostname='$hostname')"; //extracting the matching host id from the host_info table and storing it into host_id variable
+
+////defining a variable "insert_stmt" and assigning string of sql query which inserts the data into the table
 
 insert_stmt="INSERT INTO host_usage(timestamp,host_id,memory_free,cpu_idle,cpu_kernel,disk_io,disk_available) VALUES('$timestamp',$host_id,$memory_free,$cpu_idle,$cpu_kernel,$disk_io,$disk_available)"
 
 export PGPASSWORD=$psql_password
 
-psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c "$insert_stmt"
+psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c "$insert_stmt" //initiating a sql instance and saving the data extracted into the data base
 
 exit $?
 ```
 - crontab
 ```
-bash> crontab -e
-* * * * * bash /home/centos/dev/jrvs/bootcamp/linux_sql/host_agent/scripts/host_usage.sh localhost 5432 host_agent postgres password > /tmp/host_usage.log
-crontab -l
+bash> crontab -e //edit crontab jobs
+* * * * * bash /home/centos/dev/jrvs/bootcamp/linux_sql/host_agent/scripts/host_usage.sh localhost 5432 host_agent postgres password > /tmp/host_usage.log //5 stars implies 1 minute in crontab and running host_usage.sh followed by 5 required arguments
+
+crontab -l //lists currents crontab jobs
 ```
 - queries.sql (describe what business problem you are trying to resolve)
 ```select cpu_number,id,total_mem
