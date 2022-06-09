@@ -50,33 +50,37 @@ Draw a cluster diagram with three Linux hosts, a DB, and agents (use draw.io web
 Shell script description and usage (use markdown code block for script usage)
 - psql_docker.sh
 
-```#! /bin/sh
+```#! /bin/sh // used to tell the Linux OS which interpreter to use to parse the rest of the file.
 
-cmd=$1
-db_username=$2
-db_password=$3
+cmd=$1  //Getting the 1st argument
+db_username=$2//Getting the second argument from the user which is the username
+db_password=$3//Getting the third argument from the user which is the password
 
-sudo systemctl status docker || systemctl ...
+sudo systemctl status docker || systemctl start docker //Checking to see if the docker is running otherwise starting docker
 
-container_status=$?
+container_status=$? //checking the status of the container
 
-case $cmd in 
+case $cmd in //User switch case to handle create|stop|start options
   create)
-
+//checking if the container is already created
  if [ $container_status -eq 0 ]; then
 		echo 'Container already exists'
 		exit 1	
 	fi
-
+//checking if the correct number of arguments are entered
  if [ $# -ne 3 ]; then
     echo 'Create requires username and password'
     exit 1
   fi
+       //creating container          
+	docker volume create pgdata
+	
+	#creating a container using psql image with name=jrvs-psql
+	docker run --name jrvs-psql -e POSTGRES_PASSWORD=$PGPASSWORD -d -v pgdata:/var/lib/postgresql/data -p 5432:5432 postgres:9.6-alpine
 
-	docker volume ....
-	docker run ....
 	exit $?
 	;;
+//checkking if container is created	
  if [ $container_status ...
   ...
 	docker container $cmd jrvs-psql
@@ -92,25 +96,29 @@ esac
 
 - host_info.sh
 
-```#! /bin/bash
+```#! /bin/bash // used to tell the Linux OS which interpreter to use to parse the rest of the file.
 
-psql_host=$1
-psql_port=$2
-db_name=$3
-psql_user=$4
-psql_password=$5
+psql_host=$1 //getting the 1st argument from the user which is the hostname
+psql_port=$2 //getting the 2nd argument from the user which the port number
+db_name=$3 //getting the 3rd argument from the user which is the name of the database
+psql_user=$4 //getting the 4th argument from the user which is the username of the psql instance
+psql_password=$5 //getting the 5th argument from the user which the password for the psql instance
 
+//Checking if the correct number of arguments are entered if not then print "You must provide five argument" otherwise print "Welcome!"
 if [ "$#" != "5" ]; then
     echo "You must provide five args."
 else
     echo "Welcome!"
 fi
 
-lscpu_out=$(lscpu)
-fr=$(free)
+lscpu_out=$(lscpu) //storing the values from lscpu command into lscpu_out variable
+fr=$(free) //storing values from free command into fr variable
 
-hostname=$(hostname -f)
-cpu_number=$(echo "$lscpu_out"  | egrep "^CPU\(s\):" | awk '{print $2}' | xargs)
+hostname=$(hostname -f) //storing the current hostname into hostname variable
+
+//extracting the specific values from lscpu and free commands and storing them into a relevant variable using egrep function which looks for the specified string
+
+cpu_number=$(echo "$lscpu_out"  | egrep "^CPU\(s\):" | awk '{print $2}' | xargs) 
 cpu_architecture=$(echo "$lscpu_out"  | egrep "^Architecture:" | awk '{print $2}' | xargs)
 cpu_model=$(echo "$lscpu_out"  | egrep "^Model:" | awk '{print $2}' | xargs)
 cpu_mhz=$(echo "$lscpu_out"  | egrep "^CPU MHz:" | awk '{print $3}' | xargs)
@@ -118,11 +126,13 @@ L2_cache=$(echo "$lscpu_out"  | egrep "^L2 cache:" | awk '{print $3}' | xargs)
 total_mem=$(echo "$fr"  | egrep "^Mem:" | awk '{print $2}' | xargs)
 timestamp=`date +%Y-%m-%d" "%H:%M:%S`
 
+//defining a variable "insert_stmt" and assigning string of sql query
+
 insert_stmt="INSERT INTO host_info(hostname,cpu_number,cpu_architecture,cpu_model,cpu_mhz,L2_cache,total_mem,timestamp) VALUES('$hostname',$cpu_number,'$cpu_architecture','$cpu_model',$cpu_mhz,'$L2_cache',$total_mem,'$timestamp')";
 
 export PGPASSWORD=$psql_password;
 
-psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c "$insert_stmt"
+psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c "$insert_stmt" //initiating a sql instance and saving the data extracted into the data base
 exit $?
 ```
 - host_usage.sh
