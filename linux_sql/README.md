@@ -184,19 +184,23 @@ crontab -l //lists currents crontab jobs
 
 1: Group hosts by CPU number and sort by their memory size in descending order(within each cpu_number group).
 
-`select cpu_number,id,total_mem
-from host_info
+`//Selecting the columns required from the table host_info and sorting the data according decsending values of the column total_mem
+select cpu_number,id,total_mem 
+from host_info 
 order by total_mem desc;`
 
 2: Average used memory in percentage over 5 mins interval for each host. (used memory = total memory - free memory). 
 
-`CREATE FUNCTION round5(ts timestamp) RETURNS timestamp AS
+`//Creating a function "round5" for convenience which rounds the timestamp every 5 minutes
+CREATE FUNCTION round5(ts timestamp) RETURNS timestamp AS
 $$
 BEGIN
     RETURN date_trunc('hour', ts) + date_part('minute', ts):: int / 5 * interval '5 min';
 END;
 $$
     LANGUAGE PLPGSQL;
+    
+//Selecting the required columns and applying round5 function on timestamp column from host_usage table and getting the Average used memory and storing the values in avg_used_mem_percentage column    
 
 Select host_id,host_info.hostname,round5(host_usage.timestamp),AVG((host_info.total_mem)-(memory_free)) as avg_used_mem_percentage
 from host_usage, host_info
@@ -204,12 +208,32 @@ group by host_id,host_info.hostname,host_usage.timestamp;`
 
 
 ## Database Modeling
-Describe the schema of each table using markdown table syntax (do not put any sql code)
 - `host_info`
+Contains the hardware specification information and Not Null constraint has been applied to every column meaning that the columns cannot be left blank in any case. Also, the data types were assigned after viewing the values that needs to stored on the table and the details of each column are as follows in the respective order:
+
+id: has the data type of Serial with initial value of 1. Unique constraint is applied so that there are no duplicate values. This column is acting as a Primary Key for the table.
+hostname: The data type of VARCHAR because the values under this column will be a string of characters. 
+cpu_number: data type of int(integer) 
+cpu_architecture: data type of VARCHAR because the values under this column will be a string of characters.
+cpu_model: data type of VARCHAR because the values under this column will be a string of characters.
+cpu_mhz: data type of numeric because the values under this column will floating point numbers. 
+L2_cache: data type of int(integer)
+total_mem: data type of int(interger)
+timestamp: data type Timestamp which displays the current time and date in the format of "2019-01-01 00:00:00"
+
 - `host_usage`
+Contains the memory usage information and Not Null constraint has been applied to every column meaning that the columns cannot be left blank in any case. Also, the data types were assigned after viewing the values that needs to stored on the table and the details of each column are as follows in the respective order:
+
+timestamp: data type Timestamp which displays the current time and date in the format of "2019-01-01 00:00:00"
+host_id: has the data type of Serial with initial value of 1. A foreign key extracting the data from host_info table under the id column.
+memory_free: data type of int(integer)
+cpu_idle: data type int(integer)
+cpu_kernel: data type of int(integer)
+disk_io: data type of int(integer)
+disk_available: data type of int(integer)
 
 # Test
-How did you test your bash scripts and SQL queries? What was the result?
+The bash scripts were tested multiple times until the desired result was achieved on the linux command line by using bash command and viewing the data base. Also, the code was pushed on to the github project repo from which the scripts were reviewed by the senior developers.   
 
 # Deployment
 How did you deploy your app? (e.g. Github, crontab, docker)
