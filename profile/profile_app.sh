@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #cd to script dir
-cd "$(/home/centos/dev/jarvis_data_eng_AwaisDemo/profile.yaml "$0")"
+cd "$(/home/centos/dev/jarvis_data_eng_AwaisDemo/profile/profile.yaml "$0")"
 
 function init() {
   echo "---- Downloading sample profile.yaml file ----"
