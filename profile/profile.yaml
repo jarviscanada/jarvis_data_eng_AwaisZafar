@@ -2,7 +2,7 @@
 # Preferred name (Characters only)
 name: "Awais Zafar"
 # Your GitHub repo root URL
-github_repo_root_url:https://github.com/jarviscanada/jarvis_data_eng_awaiszafar
+github_repo_root_url: https://github.com/jarviscanada/jarvis_data_eng_awaiszafar
 
 # Introduce yourself (80-120 words)
 # Suggestions: you should 
@@ -75,9 +75,6 @@ highlighted_projects:
   - name: "Particle Flow Monitor"
     #git_url:
     description: A business required document (BRD) was presentated and I was required to prepare System Required Document (SRD) containing flowcharts of the software design. Developed an online continuous particle flow monitor in pneumatic conveyed pipelines using electrostatic sensors and Arduino as microcontroller and C-code was written to implement the graphical user interface which returns the values measured by the electrostatic sensors and stored into excel database and extracted if need be through Matlab for graphical representation. As part of my bachelor's final year project including 100 pages thesis was prepared to document all the details of the project and eventually, the project was presentated using .ppt upon completion. As it was an individual project so, a lot of research was done and implemented. It helped me to understand the different factors which need to be taken into consideration for these devices.
-    - name: "Solar Tracker"
-    #git_url:
-    description: Worked on a group project “Solar Tracker”. Due to my passion for software, my contribution to this project includes part of both the hardware and software design. Upon completion a group .ppt presentation was delivered to the panel of judges. The tools used to get the data from the sensors and store it into excel database were Matlab, LabView, and C-Programming. It also helped to gain experience in working with a small group of people and dealing with technical and personal problems as a group.
 
 # List of professional experience
 # Please focus on transferable skills, such as soft skills and data related skills
