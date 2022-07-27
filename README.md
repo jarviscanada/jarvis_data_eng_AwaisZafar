@@ -40,7 +40,7 @@ Project source code: [https://github.com/jarviscanada/jarvis_data_eng_awaiszafar
 
 **Product/Tax Virtual Assistance Agent, TurboTax Canada (2021-2022)**: A seasonal contract remote work to help customers all over Canada file their taxes using the TurboTax software on call and sometimes by screen-sharing. To help them effectively, I used requirement elicitation skills to understand the issue at hand, and I had 99% positive reviews on the survey that the customers used to fill out after every call. The job required multi-tasking as the agents also have to update the customer's profile on salesfloor or process a refund if need be while on the call.
 
-**Sole Prorietor, A-Z User Car Dealership (2018-2021)**:  Greeted and actively listened and used elicitation technique to understand customers to uncover purchasing needs and provide recommendations based on automotive requirements. Used consultative sales process to match customers with vehicles suiting their needs. Demonstrated vehicle functionality and explained options, accompanied prospective customers on test drives, and explained costs associated with the purchase. Used to deal with accounts and a small staff of 10 people
+**Sole Proprietor, A-Z User Car Dealership (2018-2021)**:  Greeted and actively listened and used elicitation technique to understand customers to uncover purchasing needs and provide recommendations based on automotive requirements. Used consultative sales process to match customers with vehicles suiting their needs. Demonstrated vehicle functionality and explained options, accompanied prospective customers on test drives, and explained costs associated with the purchase. Used to deal with accounts and a small staff of 10 people
 
 
 ## Education
